@@ -4,10 +4,10 @@
         });
 
         // API 키와 WMS 레이어 설정
-        var apiKey = '5RYIZ5O3-5RYI-5RYI-5RYI-5RYIZ5O33E';
+        var apiKey = 'api키 입력';
         var param = {
             name: '범죄주의구간(전체)',
-            serverUrl: 'https://www.safemap.go.kr/openApiService/wms/getLayerData.do?apikey=' + apiKey,
+            serverUrl: '',
             layername: 'A2SM_CRMNLHSPOT_TOT',
             styles: 'A2SM_CrmnlHspot_Tot_Tot'
         };
