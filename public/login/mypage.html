@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .navbar {
+            position: relative;
+            width: 100%;
+            z-index: 1001;
+            padding: 30px 0;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+        }
+        .navbar-custom {
+            padding-right: 50px;
+            padding-left: 50px;
+        }
+        .navbar-nav {
+            margin-left: auto;
+        }
+        .navbar-brand img {
+            height: 100px;
+            margin-right: 10px;
+        }
+        .navbar-nav .nav-link {
+            color: black;
+            font-size: 1.5rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: color 0.3s;
+            margin: 0 7px;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+        }
+        .navbar-brand .text-white {
+            color: black;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1.9rem;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 100px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            margin-top: 50px;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        .info p {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-group .btn {
+            display: inline-block;
+            margin: 10px;
+            font-size: 1.1rem;
+        }
+        .button-group .btn-patrol {
+            font-size: 1.2rem;
+            color: #ffc107;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .btn-danger {
+            background-color: #f4553d;
+            color: white;
+        }
+        .case-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .case-list-item a {
+            text-decoration: none;
+            color: rgb(68, 136, 244);
+        }
+        .case-list-item a:hover {
+            text-decoration: underline;
+        }
+        .delete-case-btn,
+        .complete-case-btn,
+        .edit-case-btn {
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .delete-case-btn {
+            color: #ff6347;
+        }
+        .complete-case-btn {
+            color: #4982b5;
+        }
+        .edit-case-btn {
+            color: #007bff;
+        }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" alt="Crime Scene 로고" class="navbar-logo">
+            <span class="text-white">Crime Scene</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="../main/main.html">Home</a>
+                <a class="nav-link" href="../notice/notice.html">소통하기</a>
+                <a class="nav-link" href="../mapmain/mapmain.html">지도보기</a>
+                <a class="nav-link" href="../chart/chart.html">범죄통계표</a>
+                <a class="nav-link" href="../region/region.html">위험지역</a>
+                <a class="nav-link" href="../record/record.html">기록일지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>마이페이지</h2>
+
+    <!-- 회원 정보 표시 -->
+    <div class="info">
+        <p>아이디: <span id="userId"></span></p>
+        <p>이름: <span id="userName"></span></p>
+        <p>전화번호: <span id="userPhone"></span></p>
+        <p>소속: <span id="userRegion"></span></p>
+    </div>
+
+    <!-- 내 사건 목록 -->
+    <h3>내 사건 목록</h3>
+    <div id="myCases"></div>
+
+    <!-- 종결 사건 목록 -->
+    <h3>종결 사건 목록</h3>
+    <div id="completedCases"></div>
+
+    <!-- 순찰일지 쓰기 버튼 -->
+    <div class="button-group">
+        <a id="patrolWriteBtn" class="btn btn-patrol">나의 순찰일지 쓰기</a>
+    </div>
+
+    <!-- 탈퇴 버튼 -->
+    <div class="button-group">
+        <button id="deleteAccountBtn" class="btn btn-danger">회원 탈퇴</button>
+    </div>
+</div>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7g5DdSIGP7FB5Jjsejqjwd71HKjZK0XI",
+        authDomain: "crime-scene-9a5f5.firebaseapp.com",
+        projectId: "crime-scene-9a5f5",
+        storageBucket: "crime-scene-9a5f5.appspot.com",
+        messagingSenderId: "1056014636450",
+        appId: "1:1056014636450:web:3ca8a4560bf0c135a7cefb"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // 사용자 정보 표시
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            const userDocRef = db.collection('users').doc(user.uid);
+            userDocRef.get().then(doc => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    document.getElementById('userId').textContent = userData.아이디;
+                    document.getElementById('userName').textContent = userData.이름;
+                    document.getElementById('userPhone').textContent = userData.전화번호;
+                    document.getElementById('userRegion').textContent = `${userData.소속_광역시도} ${userData.소속_시군구}`;
+                }
+            });
+
+            // 내 사건 목록 불러오기
+            loadCases('assignedCases', 'myCases', user.uid, false);
+
+            // 종결 사건 목록 불러오기
+            loadCases('completedCases', 'completedCases', user.uid, true);
+
+        } else {
+            window.location.href = '../login/login.html';
+        }
+    });
+
+    // 사건 목록을 불러오고 표시하는 함수
+    function loadCases(collectionName, containerId, userId, isCompleted) {
+        db.collection(collectionName).where('담당자ID', '==', userId).get().then((querySnapshot) => {
+            const caseList = document.createElement('ul');
+            querySnapshot.forEach((doc) => {
+                const caseData = doc.data();
+                const listItem = document.createElement('li');
+                listItem.classList.add('case-list-item');
+                listItem.innerHTML = `
+                    <a href="../koreamap/mapdetail.html?id=${caseData.사건ID}">
+                        ${caseData.제목} (${caseData.지역}) - ${caseData.날짜.toDate().toLocaleDateString()}
+                    </a>
+                    ${isCompleted 
+                        ? `<span class="edit-case-btn" data-id="${doc.id}" data-title="${caseData.제목}">수정</span>` 
+                        : `<span class="complete-case-btn" data-id="${doc.id}" data-title="${caseData.제목}">종결</span>`
+                    }
+                    <span class="delete-case-btn" data-id="${doc.id}">삭제</span>
+                `;
+                caseList.appendChild(listItem);
+            });
+            document.getElementById(containerId).appendChild(caseList);
+
+            // 삭제 버튼 이벤트 추가
+            document.querySelectorAll('.delete-case-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const caseId = e.target.getAttribute('data-id');
+                    if (confirm('이 사건을 삭제하시겠습니까?')) {
+                        db.collection(collectionName).doc(caseId).delete().then(() => {
+                            alert('사건이 삭제되었습니다.');
+                            location.reload(); // 페이지 새로고침
+                        }).catch((error) => {
+                            console.error('사건 삭제 중 오류 발생: ', error);
+                        });
+                    }
+                });
+            });
+
+            // 종결 버튼 이벤트 추가
+            document.querySelectorAll('.complete-case-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const caseId = e.target.getAttribute('data-id');
+                    const caseTitle = e.target.getAttribute('data-title');
+                    if (confirm(`${caseTitle} 사건을 종결하시겠습니까?`)) {
+                        // 종결 사건으로 이동
+                        db.collection(collectionName).doc(caseId).get().then((doc) => {
+                            const caseData = doc.data();
+                            db.collection('completedCases').add(caseData).then(() => {
+                                db.collection(collectionName).doc(caseId).delete().then(() => {
+                                    alert('사건이 종결되었습니다.');
+                                    location.reload(); // 페이지 새로고침
+                                }).catch((error) => {
+                                    console.error('사건 삭제 중 오류 발생: ', error);
+                                });
+                            }).catch((error) => {
+                                console.error('종결 사건 등록 중 오류 발생: ', error);
+                            });
+                        });
+                    }
+                });
+            });
+
+            // 수정 버튼 이벤트 추가 (종결 사건에서 내 사건으로 이동)
+            document.querySelectorAll('.edit-case-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const caseId = e.target.getAttribute('data-id');
+                    const caseTitle = e.target.getAttribute('data-title');
+                    if (confirm(`${caseTitle} 사건을 다시 내 사건 목록으로 이동하시겠습니까?`)) {
+                        // 내 사건으로 이동
+                        db.collection(collectionName).doc(caseId).get().then((doc) => {
+                            const caseData = doc.data();
+                            db.collection('assignedCases').add(caseData).then(() => {
+                                db.collection(collectionName).doc(caseId).delete().then(() => {
+                                    alert('사건이 내 사건으로 이동되었습니다.');
+                                    location.reload(); // 페이지 새로고침
+                                }).catch((error) => {
+                                    console.error('사건 삭제 중 오류 발생: ', error);
+                                });
+                            }).catch((error) => {
+                                console.error('내 사건 등록 중 오류 발생: ', error);
+                            });
+                        });
+                    }
+                });
+            });
+        }).catch((error) => {
+            console.error('사건 목록 불러오기 오류: ', error);
+        });
+    }
+
+    // 순찰일지 쓰기 버튼 클릭 이벤트
+    document.getElementById('patrolWriteBtn').addEventListener('click', () => {
+        window.location.href = '../patrol/patrol_write.html';
+    });
+
+    // 회원 탈퇴 처리
+    document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+        const confirmed = confirm('정말로 탈퇴하시겠습니까?');
+        if (confirmed) {
+            const user = auth.currentUser;
+            if (user) {
+                db.collection('users').doc(user.uid).delete().then(() => {
+                    user.delete().then(() => {
+                        alert('탈퇴가 완료되었습니다.');
+                        window.location.href = '../login/login.html';
+                    }).catch(error => {
+                        alert('탈퇴 실패: ' + error.message);
+                    });
+                }).catch(error => {
+                    alert('데이터 삭제 실패: ' + error.message);
+                });
+            }
+        }
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

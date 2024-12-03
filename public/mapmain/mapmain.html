@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>범죄주의구간 지도 표시</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="mapmain.css">
+</head>
+
+<body>
+    <button id="homeBtn"><i class="fas fa-home"></i></button>
+    <div id="map"></div>
+    <div id="search-container">
+        <div id="search">
+            <div id="query-container">
+                <input type="text" id="query" placeholder="주소 또는 키워드를 입력하세요">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+            <select id="searchType">
+                <option value="address">주소</option>
+                <option value="keyword">키워드</option>
+            </select>
+        </div>
+        <ul id="placesList"></ul>
+    </div>
+    <button id="toggleSearchBtn"><i class="fas fa-angle-double-left"></i></button>
+
+    <!-- 정보 팝업 -->
+    <div id="infoPopup">
+        <p>빨간 마커는 피의자 신분이었을 때 신상 공개된 사건의 대략적인 발생 장소를 표시합니다. 정확한 장소가 아닐 수 있음을 알립니다.</p>
+        <p>또한 지도에서 레이어된 범죄주의 구간은 빨간색일수록 해당 지역의 위험도가 높음을 의미합니다.</p>
+        <button id="closePopupBtn">닫기</button>
+    </div>
+
+
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=1b5eaa5f89dbc525e2d29d5c0911d1f9&libraries=services"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
+    <script src="mapmain.js"></script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>의견 지도</title>
+    <!-- 부트스트랩 CSS 로드 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        .navbar {
+            position: relative;
+            width: 100%;
+            z-index: 1001;
+            padding: 30px 0;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+        }
+        .navbar-custom {
+            padding-right: 50px;
+            padding-left: 50px;
+        }
+        .navbar-nav {
+            margin-left: auto;
+        }
+        .navbar-brand img {
+            height: 100px;
+            margin-right: 10px;
+        }
+        .navbar-nav .nav-link {
+            color: black;
+            font-size: 1.5rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: color 0.3s;
+            margin: 0 7px;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+        }
+        .navbar-brand .text-white {
+            color: black;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1.9rem;
+        }
+        .community-menu {
+            background-color: white;
+            padding: 20px 0;
+            border-top: 1px solid #dee2e6;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .community-page {
+            font-size: 1.2rem;
+            color: #343a40;
+            margin-right: 15px;
+        }
+        .community-menu .nav {
+            justify-content: center;
+        }
+        .community-menu .nav-link {
+            font-size: 1.2rem;
+            color: #343a40;
+            transition: color 0.3s;
+        }
+        .community-menu .nav-link:hover {
+            color: #ffc107;
+        }
+        .header {
+            background-color: #fff; 
+            padding: 50px 0;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .header h1 
+        {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .map-container {
+            position: relative;
+            flex: 1;
+        }
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .post-list {
+            flex: 1;
+            margin-left: 20px;
+        }
+        .post-count {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .post-list table a {
+            color: black;
+            text-decoration: none;
+        }
+        .post-list table a:hover {
+            text-decoration: underline;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination .page-link {
+            color: #007bff;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .pagination .page-link:hover {
+            color: #0056b3;
+        }
+        table thead th {
+            background-color: #4488f4;
+            color: white;
+            font-weight: bold;
+        }
+        .search-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .search-container select {
+            margin-right: 10px;
+            width: 100px;
+        }
+        .search-container input {
+            margin-right: 10px;
+            width: 200px;
+        }
+        .write-button {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .write-button button {
+            background-color: #4488f4;
+            border-color: #4488f4;
+            color: white;
+        }
+        footer {
+            margin-top: 100px;
+            background-color: #f8f9fa;
+            color: black;
+            padding: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" alt="Crime Scene 로고" class="navbar-logo">
+            <span class="text-white">Crime Scene</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="../main/main.html">Home</a>
+                <a class="nav-link" href="../notice/notice.html">소통하기</a>
+                <a class="nav-link" href="../mapmain/mapmain.html">지도보기</a>
+                <a class="nav-link" href="../chart/chart.html">범죄통계표</a>
+                <a class="nav-link" href="../region/region.html">위험지역</a>
+                <a class="nav-link" href="../record/record.html">기록일지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 커뮤니티 페이지 선택 -->
+<div class="community-menu">
+    <div class="row align-items-center justify-content-center">
+        <div class="col-auto">
+            <span class="community-page"><i class="fas fa-home"></i> community</span>
+        </div>
+        <div class="col-auto">
+            <nav class="nav justify-content-center">
+                <a class="nav-link" href="../notice/notice.html">공지사항</a>
+                <a class="nav-link" href="../board/board.html">의견 게시판</a>
+                <a class="nav-link" href="../koreamap/map.html">순찰요청</a>
+                <a class="nav-link" href="../search/search.html">경찰서찾기</a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- 헤더 -->
+<div class="header">
+    <h1>순찰 요청</h1>
+    <p>순찰 요청 지역을 중심으로 순찰강화</p>
+</div>
+
+<!-- 지도와 게시글 목록을 Flexbox 레이아웃으로 배치 -->
+<div class="container">
+    <!-- 지도 -->
+    <div class="map-container">
+        <img src="../image/대한민국 광역시 지도.jpg" usemap="#image-map" id="map-image" style="max-width: 100%; height: auto;">
+        <canvas id="overlay"></canvas>
+    </div>
+
+    <!-- 게시글 목록이 표시될 영역 -->
+    <div class="post-list">
+        <h3>선택된 지역의 게시글</h3>
+        <div id="post-count" class="post-count"></div>
+
+        <!-- 검색창과 검색 옵션 -->
+        <div class="search-container">
+            <select id="searchType" class="form-select form-select-sm">
+                <option value="제목" selected>제목</option>
+                <option value="작성자">작성자</option>
+            </select>
+            <input type="text" id="searchInput" class="form-control" placeholder="검색어를 입력하세요">
+            <button class="btn btn-primary" id="searchButton">검색</button>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>날짜</th>
+                </tr>
+            </thead>
+            <tbody id="post-list">
+                <!-- 게시글 목록이 동적으로 추가됩니다. -->
+            </tbody>
+        </table>
+
+        <!-- 글쓰기 버튼 -->
+        <div class="write-button">
+            <button class="btn btn-primary" onclick="window.location.href='korea.html'">글쓰기</button>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <span class="page-link" id="prevPage">이전</span>
+            <span class="page-link" id="nextPage">다음</span>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>경기도 용인시 처인구 용인대학로 134 | 민원전화 010-1234-5678</p>
+    <p>© 2024 Crime Scene. All rights reserved.</p>
+</footer>
+
+<!-- Firebase SDK 로드 및 기타 스크립트 추가 -->
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 제이쿼리 로드 -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<!-- 부트스트랩 JS 로드 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script>
+
+    // Firebase 초기화
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7g5DdSIGP7FB5Jjsejqjwd71HKjZK0XI",
+        authDomain: "crime-scene-9a5f5.firebaseapp.com",
+        projectId: "crime-scene-9a5f5",
+        storageBucket: "crime-scene-9a5f5.appspot.com",
+        messagingSenderId: "1056014636450",
+        appId: "1:1056014636450:web:3ca8a4560bf0c135a7cefb"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
+    let allDocs = [];
+    let filteredDocs = [];
+    let currentPage = 0;
+    const pageSize = 10; // 페이지당 게시글 수
+    
+    // 페이지 로드 시 전체 게시글 불러오기
+    window.onload = function() {
+        loadAllPosts();
+    };
+    
+    // 모든 게시글을 불러오는 함수
+    function loadAllPosts() {
+        const postList = document.getElementById('post-list');
+        const postCount = document.getElementById('post-count');
+        postList.innerHTML = ''; // 기존 목록 초기화
+    
+        db.collection('patrolRequests')
+            .orderBy('날짜', 'desc') // 날짜 기준 내림차순 정렬
+            .get()
+            .then((snapshot) => {
+                allDocs = snapshot.docs; // 전체 문서를 배열로 저장
+                filteredDocs = allDocs; // 검색 대상 문서로 설정
+                const totalPosts = snapshot.size;
+                postCount.textContent = `총 게시글 개수: ${totalPosts}`;
+                renderPage(); // 첫 페이지 렌더링
+            })
+            .catch((error) => {
+                console.error('게시글을 불러오는 중 오류 발생: ', error);
+            });
+    }
+    
+    // 특정 지역의 게시글을 불러오는 함수
+    function loadPostsForRegion(region) {
+        const postList = document.getElementById('post-list');
+        const postCount = document.getElementById('post-count');
+        postList.innerHTML = ''; // 기존 목록 초기화
+    
+        db.collection('patrolRequests')
+            .where('지역', '==', region)
+            .orderBy('날짜', 'desc') // 날짜 기준 내림차순 정렬
+            .get()
+            .then((snapshot) => {
+                allDocs = snapshot.docs; // 선택된 지역의 문서를 배열로 저장
+                filteredDocs = allDocs; // 검색 대상 문서로 설정
+                const totalPosts = snapshot.size;
+                postCount.textContent = `${region} 지역의 게시글 개수: ${totalPosts}`;
+                renderPage(); // 첫 페이지 렌더링
+            })
+            .catch((error) => {
+                console.error('특정 지역 게시글을 불러오는 중 오류 발생: ', error);
+            });
+    }
+    
+    // 페이지 렌더링 함수 (제목 색상 변경 추가)
+    function renderPage() {
+        const postList = document.getElementById('post-list');
+        postList.innerHTML = ''; // 기존 목록 초기화
+    
+        const start = currentPage * pageSize;
+        const end = start + pageSize;
+        const pageDocs = filteredDocs.slice(start, end);
+    
+        pageDocs.forEach((doc, index) => {
+            const data = doc.data();
+            const date = data.날짜.toDate();
+            const row = document.createElement('tr');
+    
+            const titleLink = document.createElement('a');
+            titleLink.href = `mapdetail.html?id=${doc.id}`;
+            titleLink.textContent = data.제목;
+    
+            // 글의 상태에 따라 색상 변경
+            checkCaseStatus(doc.id, titleLink);
+    
+            row.innerHTML = `
+                <td>${filteredDocs.length - (start + index)}</td>
+                <td></td>
+                <td>${data.닉네임}</td>
+                <td>${date.toLocaleDateString()}</td>
+            `;
+            row.children[1].appendChild(titleLink); // 제목을 링크에 추가
+            postList.appendChild(row);
+        });
+    }
+    
+    // 글의 상태를 확인하여 제목 색상을 변경하는 함수
+    function checkCaseStatus(postId, titleLink) {
+        // assignedCases에서 확인
+        db.collection('assignedCases').where('사건ID', '==', postId).get().then((snapshot) => {
+            if (!snapshot.empty) {
+                // assignedCases에 있으면 초록색으로 설정
+                titleLink.style.color = 'green';
+            } else {
+                // completedCases에서 확인
+                db.collection('completedCases').where('사건ID', '==', postId).get().then((snapshot) => {
+                    if (!snapshot.empty) {
+                        // completedCases에 있으면 보라색으로 설정
+                        titleLink.style.color = 'purple';
+                    } else {
+                        // 두 컬렉션에 없으면 기본 색상
+                        titleLink.style.color = 'black';
+                    }
+                });
+            }
+        }).catch((error) => {
+            console.error('상태 확인 중 오류 발생: ', error);
+        });
+    }
+    
+    // 페이지 전환 기능
+    document.getElementById('nextPage').addEventListener('click', () => {
+        if ((currentPage + 1) * pageSize < filteredDocs.length) {
+            currentPage++;
+            renderPage();
+        }
+    });
+    
+    document.getElementById('prevPage').addEventListener('click', () => {
+        if (currentPage > 0) {
+            currentPage--;
+            renderPage();
+        }
+    });
+    
+    // 검색 기능 구현
+    document.getElementById('searchButton').addEventListener('click', searchDocuments);
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            searchDocuments();
+        }
+    });
+    
+    function searchDocuments() {
+        const searchType = document.getElementById('searchType').value;
+        const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+    
+        filteredDocs = allDocs.filter(doc => {
+            const data = doc.data();
+            if (searchType === '제목') {
+                return data.제목.toLowerCase().includes(searchInput);
+            } else if (searchType === '작성자') {
+                return data.닉네임.toLowerCase().includes(searchInput);
+            }
+            return false;
+        });
+    
+        currentPage = 0; // 검색할 때 페이지를 처음으로 초기화
+        renderPage(); // 검색 결과를 렌더링
+    }
+    
+    // 지도에서 지역 클릭 시 해당 지역의 게시글만 표시
+    function showInfo(region, areaElement) {
+        highlightRegion(areaElement); // 선택된 지역에 레이어 표시
+        loadPostsForRegion(region); // 선택된 지역의 게시글만 로드
+    }
+    
+    // 선택된 지역에 빨간색 반투명 레이어 추가
+    function highlightRegion(areaElement) {
+        const coords = areaElement.coords.split(',').map(Number);
+        const canvas = document.getElementById('overlay');
+        const ctx = canvas.getContext('2d');
+        const image = document.getElementById('map-image');
+    
+        canvas.width = image.clientWidth;
+        canvas.height = image.clientHeight;
+    
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+        ctx.beginPath();
+        ctx.moveTo(coords[0], coords[1]);
+    
+        for (let i = 2; i < coords.length; i += 2) {
+            ctx.lineTo(coords[i], coords[i + 1]);
+        }
+        ctx.closePath();
+        ctx.fill();
+    }
+    
+    </script>
+    
+
+<!-- 이미지맵 영역 정의 -->
+<map name="image-map">
+    <!-- 서울 -->
+    <area target="" alt="서울" title="서울" href="javascript:void(0);" coords="169,146,177,151,181,145,186,146,188,134,193,132,200,133,201,143,205,148,208,161,204,171,195,171,181,171,176,164,173,164,169,155" shape="poly" onclick="showInfo('서울', this)">
+    
+    <!-- 인천 -->
+    <area target="" alt="인천" title="인천" href="javascript:void(0);" coords="146,151,156,143,167,152,170,163,167,171,161,177,149,164,147,172,133,175,127,168,121,157,117,149,109,140,104,130,111,130,111,120,118,118,125,118,131,112,136,119,141,123,144,129" shape="poly" onclick="showInfo('인천', this)">
+    
+    <!-- 경기 -->
+    <area target="" alt="경기도" title="경기도" href="javascript:void(0);" coords="147,127,157,128,160,117,165,115,162,104,171,103,174,96,178,91,169,86,167,76,181,80,181,73,181,64,187,72,192,67,201,62,205,64,209,73,223,81,227,87,238,90,247,106,248,115,246,123,243,132,246,136,247,148,259,152,268,150,274,158,267,164,271,172,268,181,267,188,269,203,259,212,246,220,226,240,216,235,205,233,190,240,178,242,172,232,163,224,158,214,151,205,152,199,162,185,166,177,174,167,179,174,184,174,194,174,201,173,209,169,209,157,202,137,196,131,189,134,184,142,176,151,164,147,158,141,148,147,145,135" shape="poly" onclick="showInfo('경기도', this)">
+    
+    <!-- 강원 -->
+    <area target="" alt="강원도" title="강원도" href="javascript:void(0);" coords="219,57,206,63,213,69,217,77,237,88,248,111,245,130,246,142,255,148,269,148,273,158,266,163,271,175,269,190,270,203,275,206,281,204,288,198,293,194,298,202,305,198,316,194,321,203,325,208,335,210,345,211,352,218,364,219,371,215,384,219,390,216,396,214,406,217,416,217,420,204,430,202,429,186,417,170,403,148,397,131,381,115,366,92,357,81,350,59,332,24,321,23,325,35,318,47,309,43,303,48,299,59,264,63,251,58,249,55,241,54,237,59,232,65" shape="poly" onclick="showInfo('강원도', this)">
+    
+    <!-- 대전 -->
+    <area target="" alt="대전" title="대전" href="javascript:void(0);" coords="227,312,218,315,218,322,223,327,230,323,238,322,239,315,244,310,247,305,237,307,231,309,227,312" shape="poly" onclick="showInfo('대전', this)">
+    
+    <!-- 충북 -->
+    <area target="" alt="충청북도" title="충청북도" href="javascript:void(0);" coords="234,232,250,220,265,207,275,208,285,206,287,200,295,196,299,202,319,196,322,208,335,211,346,212,353,221,342,230,343,243,335,254,320,243,312,250,299,262,288,266,283,269,283,282,287,286,287,300,283,310,282,318,290,319,298,324,302,330,295,333,291,341,287,346,279,351,272,354,263,350,258,343,254,338,244,337,235,328,242,318,248,310,243,297,233,296,230,287,226,277,226,263,231,261,238,259,241,252,234,247,229,243" shape="poly" onclick="showInfo('충청북도', this)">
+    
+    <!-- 경북 -->
+    <area target="" alt="경상북도" title="경상북도" href="javascript:void(0);" coords="319,244,336,254,342,245,342,234,345,228,350,222,351,215,358,219,366,218,378,214,384,220,394,214,403,218,415,217,423,206,431,208,438,218,438,228,441,241,446,252,444,265,442,272,442,281,441,290,438,300,436,311,437,330,444,338,446,348,450,341,455,347,459,354,458,362,456,369,456,378,450,381,452,387,449,400,440,399,430,397,424,393,418,390,412,394,405,398,401,402,389,402,386,412,377,415,361,409,354,404,353,397,362,394,365,389,377,380,379,372,376,362,371,356,359,355,346,358,341,365,334,370,336,375,335,382,334,391,329,397,328,402,318,405,313,394,309,386,301,375,289,376,285,371,283,359,284,347,294,339,301,331,297,324,289,318,285,311,289,296,285,283,284,267,301,264" shape="poly" onclick="showInfo('경상북도', this)">
+    
+    <!-- 부산 -->
+    <area target="" alt="부산" title="부산" href="javascript:void(0);" coords="419,436,409,444,397,449,387,456,374,471,361,471,355,473,347,478,345,485,347,493,354,489,361,482,372,481,377,483,386,489,394,480,404,476,413,472,421,465,425,460,425,447,424,437" shape="poly" onclick="showInfo('부산', this)">
+    
+    <!-- 전라남도 -->
+    <area target="" alt="전라남도" title="전라남도" href="javascript:void(0);" coords="185,484,196,478,197,469,190,458,185,453,177,454,166,456,160,457,153,469,158,474,164,476,165,485,175,480,273,538,265,541,249,536,244,542,248,552,246,566,236,567,229,560,217,565,206,565,207,574,204,582,192,583,185,577,177,580,164,583,146,578,136,575,125,569,102,577,105,587,93,595,81,601,68,587,73,573,81,555,89,543,77,541,77,534,73,521,75,512,78,508,84,504,87,494,96,488,87,478,87,470,93,465,101,463,107,471,115,465,116,454,121,448,127,435,132,437,142,447,149,448,155,443,162,439,167,433,174,431,181,428,184,433,193,438,197,450,205,453,209,448,216,447,232,452,242,444,252,448,252,457,253,469,261,477,272,485,269,497,272,509,273,522,273,528,269,534" shape="poly" onclick="showInfo('전라남도', this)">
+    
+    <!-- 제주도 -->
+    <area target="" alt="제주도" title="제주도" href="javascript:void(0);" coords="167,616,180,614,183,631,180,640,176,648,168,651,157,660,147,660,133,657,119,665,102,650,100,640,110,631,122,622,139,622,155,614" shape="poly" onclick="showInfo('제주도', this)">
+
+<!-- 대구 -->
+<area target="" alt="대구" title="대구" href="javascript:void(0);" coords="357,355,349,361,344,366,337,372,337,379,337,390,328,402,335,406,351,404,353,393,362,389,369,383,374,371,369,354" shape="poly" onclick="showInfo('대구', this)">
+
+<!-- 울산 -->
+<area target="" alt="울산" title="울산" href="javascript:void(0);" coords="413,397,421,396,426,403,434,403,443,405,450,411,449,418,438,428,441,433,440,438,435,443,429,446,422,436,414,428,408,425,398,419,401,410,402,400" shape="poly" onclick="showInfo('울산', this)">
+
+<!-- 충청남도 -->
+<area target="" alt="충청남도" title="충청남도" href="javascript:void(0);" coords="163,233,165,235,153,226,141,218,134,223,124,227,108,242,101,252,99,267,114,278,123,275,126,284,120,292,124,302,130,311,142,315,148,318,141,328,141,335,152,346,160,354,168,360,175,362,181,354,188,346,190,338,200,339,199,349,210,358,219,348,228,346,232,350,240,355,241,362,250,365,256,362,260,358,260,344,243,339,231,329,219,329,214,317,214,305,226,297,230,287,223,273,222,260,229,259,237,257,227,248,214,238,205,237,193,241,180,246,172,236,163,233,161,235" shape="poly" onclick="showInfo('충청남도', this)">
+
+<!-- 전라북도 -->
+<area target="" alt="전라북도" title="전라북도" href="javascript:void(0);" coords="169,358,176,354,184,346,192,338,197,350,210,358,218,350,230,347,230,356,238,362,247,362,255,361,259,352,263,357,269,356,278,357,278,366,272,374,266,379,262,382,257,394,255,408,254,415,260,432,251,444,240,441,234,447,221,443,212,446,198,446,194,434,185,430,178,426,166,432,162,438,154,443,144,441,138,430,133,422,139,416,138,402,147,398,154,392,157,382,152,368,146,361,149,355" shape="poly" onclick="showInfo('전라북도', this)">
+
+<!-- 광주 -->
+<area target="" alt="광주" title="광주" href="javascript:void(0);" coords="165,457,169,460,176,455,182,454,185,463,191,462,194,466,196,474,190,477,185,480,174,479,166,482,168,475,161,476,155,472,157,464" shape="poly" onclick="showInfo('광주', this)">
+
+<!-- 세종 -->
+<area target="" alt="세종" title="세종" href="javascript:void(0);" coords="222,298,217,302,217,313,227,310,246,306,241,297" shape="poly" onclick="showInfo('세종', this)">
+
+<!-- 경상남도 -->
+<area target="" alt="경상남도" title="경상남도" href="javascript:void(0);" coords="282,372,297,377,304,378,312,387,315,399,319,405,331,407,338,406,355,402,358,410,368,411,378,415,384,413,391,402,400,402,398,410,396,418,399,424,404,428,413,430,418,434,409,437,403,443,390,450,379,462,375,469,359,471,347,478,345,485,345,492,356,489,366,482,371,482,375,489,373,499,376,506,371,512,368,526,355,532,343,523,335,510,325,514,313,514,310,522,304,529,287,523,278,525,277,496,274,486,263,468,259,454,254,444,263,435,256,418,257,410,258,398,266,397,262,386,272,382" shape="poly" onclick="showInfo('경상남도', this)">
+
+</map>
+
+
+</body>
+</html>

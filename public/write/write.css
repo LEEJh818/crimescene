@@ -1,0 +1,144 @@
+.navbar {
+    position: relative;
+    width: 100%;
+    z-index: 1001;
+    padding: 30px 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-custom {
+    padding-right: 50px;
+    padding-left: 50px;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.navbar-brand img {
+    height: 100px;
+    margin-right: 10px;
+}
+
+.navbar-nav .nav-link {
+    color: black;
+    font-size: 1.5rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: color 0.3s;
+    margin: 0 7px; /* 글씨 간격 추가 */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffc107 !important;
+}
+
+.navbar-brand .text-white {
+    color: black;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.9rem;
+}
+
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fff;
+}
+
+.header {
+    background-color: #fff;
+    padding: 50px 0;
+    text-align: center;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #343a40;
+}
+
+.header p {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-text {
+    color: #6c757d;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.form-control, .form-select {
+    font-size: 1rem;
+}
+
+.form-select {
+    width: auto;
+}
+
+.file-input {
+    position: relative;
+    overflow: hidden;
+}
+
+.file-input input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.file-name {
+    display: inline-block;
+    padding-left: 10px;
+    font-size: 1rem;
+}
+
+.submit-btn {
+    text-align: right;
+}
+
+.btn-primary{
+    background-color: rgb(68, 136, 244); /* 원하는 배경색 (여기서는 토마토색) */
+    color: white; /* 글자 색을 흰색으로 */
+}
+
+.mb-3 {
+    margin-bottom: 3rem !important;
+}
+
+footer {
+    margin-top: 100px;
+    background-color: #f8f9fa;
+    color: black;
+    padding: 30px;
+    text-align: center;
+}

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 페이지</title>
+    
+    <!-- 부트스트랩 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+
+    <style>
+
+.navbar {
+    position: relative;
+    width: 100%;
+    z-index: 1001;
+    padding: 30px 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-custom {
+    padding-right: 50px;
+    padding-left: 50px;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.navbar-brand img {
+    height: 100px;
+    margin-right: 10px;
+}
+
+.navbar-nav .nav-link {
+    color: black;
+    font-size: 1.5rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: color 0.3s;
+    margin: 0 7px; /* 글씨 간격 추가 */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffc107 !important;
+}
+
+.navbar-brand .text-white {
+    color: black;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.9rem;
+}
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            flex: 0 0 120px;
+            font-weight: bold;
+        }
+        .form-group input {
+            flex: 1;
+        }
+        .address-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .address-group select {
+            width: 32%;
+        }
+        .btn-primary {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" alt="Crime Scene 로고" class="navbar-logo">
+            <span class="text-white">Crime Scene</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="../main/main.html">Home</a>
+                <a class="nav-link" href="../notice/notice.html">소통하기</a>
+                <a class="nav-link" href="../mapmain/mapmain.html">지도보기</a>
+                <a class="nav-link" href="../chart/chart.html">범죄통계표</a>
+                <a class="nav-link" href="../region/region.html">위험지역</a>
+                <a class="nav-link" href="../record/record.html">기록일지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>회원가입</h2>
+    
+    <!-- 아이디 입력 -->
+    <div class="form-group">
+        <label for="signupId">이메일 아이디</label>
+        <input type="text" class="form-control" id="signupId" placeholder="이메일 입력해주세요">
+    </div>
+
+    <!-- 비밀번호 입력 -->
+    <div class="form-group">
+        <label for="signupPassword">비밀번호</label>
+        <input type="password" class="form-control" id="signupPassword" placeholder="10-15자로 입력(영문대소문자, 숫자 혼합)">
+    </div>
+
+    <!-- 비밀번호 확인 입력 -->
+    <div class="form-group">
+        <label for="confirmPassword">비밀번호 확인</label>
+        <input type="password" class="form-control" id="confirmPassword" placeholder="위와 동일한 비밀번호를 한번 더 입력">
+    </div>
+
+    <!-- 이름 입력 -->
+    <div class="form-group">
+        <label for="signupName">이름</label>
+        <input type="text" class="form-control" id="signupName" placeholder="이름을 입력해 주세요.">
+    </div>
+
+    <!-- 휴대폰 번호 입력 -->
+    <div class="form-group">
+        <label for="signupPhone">휴대폰번호</label>
+        <input type="tel" class="form-control" id="signupPhone" placeholder="휴대폰번호를 입력하세요.">
+    </div>
+
+    <!-- 주소 선택 (광역시도, 시군구, 읍면동) -->
+    <div class="form-group">
+        <label for="address">주소</label>
+        <div class="address-group">
+            <select id="region1" class="form-select">
+                <option selected>광역시도 선택</option>
+            </select>
+            
+            <select id="region2" class="form-select" disabled>
+                <option selected>시군구 선택</option>
+            </select>
+            
+            <select id="region3" class="form-select" disabled>
+                <option selected>읍면동 선택</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 회원가입 버튼 -->
+    <button type="button" class="btn btn-primary" id="signupBtn">회원가입</button>
+</div>
+
+<!-- Firebase 초기화 -->
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7g5DdSIGP7FB5Jjsejqjwd71HKjZK0XI",
+        authDomain: "crime-scene-9a5f5.firebaseapp.com",
+        projectId: "crime-scene-9a5f5",
+        storageBucket: "crime-scene-9a5f5.appspot.com",
+        messagingSenderId: "1056014636450",
+        appId: "1:1056014636450:web:3ca8a4560bf0c135a7cefb"
+    };
+
+    // Firebase 초기화
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();  // Firestore 초기화
+</script>
+
+<!-- 시군구, 읍면동 Firestore 연동 JavaScript -->
+<script>
+    // Firestore에서 광역시도 데이터를 드롭다운으로 불러오기
+    function loadRegions() {
+        const region1Select = document.getElementById('region1');
+        
+        // Firestore에서 광역시도 문서 불러오기 (adress 컬렉션)
+        db.collection("adress").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const region1 = doc.id;  // 문서 ID는 광역시도명
+                const option = document.createElement('option');
+                option.value = region1;
+                option.text = region1;
+                region1Select.appendChild(option);
+            });
+        }).catch((error) => {
+            console.error("광역시도 불러오기 실패:", error);
+        });
+    }
+
+    // 광역시도 선택 시 시군구 불러오기
+    document.getElementById('region1').addEventListener('change', function() {
+        const selectedRegion1 = this.value;
+        const region2Select = document.getElementById('region2');
+        const region3Select = document.getElementById('region3');
+
+        // Firestore에서 선택된 광역시도의 시군구 불러오기
+        db.collection("adress").doc(selectedRegion1).get().then((doc) => {
+            if (doc.exists) {
+                const regionData = doc.data();  // 자치구/시군구 데이터
+                region2Select.innerHTML = '<option selected>시군구 선택</option>';
+                Object.keys(regionData).forEach(region2 => {
+                    const option = document.createElement('option');
+                    option.value = region2;
+                    option.text = region2;
+                    region2Select.appendChild(option);
+                });
+                region2Select.disabled = false;
+            } else {
+                console.log("문서가 없습니다!");
+            }
+        }).catch((error) => {
+            console.log("시군구 불러오기 실패:", error);
+        });
+    });
+
+    // 시군구 선택 시 읍면동 불러오기
+    document.getElementById('region2').addEventListener('change', function() {
+        const selectedRegion1 = document.getElementById('region1').value;
+        const selectedRegion2 = this.value;
+        const region3Select = document.getElementById('region3');
+
+        // Firestore에서 선택된 시군구의 읍면동 불러오기
+        db.collection("adress").doc(selectedRegion1).get().then((doc) => {
+            if (doc.exists) {
+                const regionData = doc.data();
+                const eupmyeondongList = regionData[selectedRegion2];
+                region3Select.innerHTML = '<option selected>읍면동 선택</option>';
+                eupmyeondongList.forEach(region3 => {
+                    const option = document.createElement('option');
+                    option.value = region3;
+                    option.text = region3;
+                    region3Select.appendChild(option);
+                });
+                region3Select.disabled = false;
+            } else {
+                console.log("읍면동 데이터 없음");
+            }
+        }).catch((error) => {
+            console.log("읍면동 불러오기 실패:", error);
+        });
+    });
+
+    // 페이지 로드 시 광역시도 목록 불러오기
+    loadRegions();
+</script>
+
+<!-- 회원가입 처리 및 Firestore 저장 JavaScript -->
+<script>
+    document.getElementById('signupBtn').addEventListener('click', function() {
+        const id = document.getElementById('signupId').value;
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const name = document.getElementById('signupName').value;
+        const phone = document.getElementById('signupPhone').value;
+        const region1 = document.getElementById('region1').value;
+        const region2 = document.getElementById('region2').value;
+        const region3 = document.getElementById('region3').value;
+
+        // 입력 검증
+        if (!id || !password || !confirmPassword || !name || !phone || region1 === '광역시도 선택' || region2 === '시군구 선택' || region3 === '읍면동 선택') {
+            alert('모든 필드를 올바르게 입력해 주세요.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
+        // Firebase 회원가입 및 Firestore에 저장
+        firebase.auth().createUserWithEmailAndPassword(id, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                return db.collection('users').doc(user.uid).set({
+                    아이디: id,
+                    이름: name,
+                    전화번호: phone,
+                    소속_광역시도: region1,
+                    소속_시군구: region2,
+                    소속_읍면동: region3,
+                    가입일: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            })
+            .then(() => {
+                alert('회원가입이 완료되었습니다.');
+                // 회원가입 완료 후 ../main/main.html로 리디렉션
+                window.location.href = '../main/main.html';
+            })
+            .catch((error) => {
+                alert('회원가입 실패: ' + error.message);
+            });
+    });
+</script>
+
+<!-- 부트스트랩 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

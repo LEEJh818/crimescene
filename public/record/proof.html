@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>순찰 일지 작성</title>
+    <!-- 부트스트랩 CSS 로드 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="write.css">
+
+    <style>
+        .navbar {
+            position: relative;
+            width: 100%;
+            z-index: 1001;
+            padding: 30px 0;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .navbar-custom {
+            padding-right: 50px;
+            padding-left: 50px;
+        }
+        
+        .navbar-nav {
+            margin-left: auto;
+        }
+        
+        .navbar-brand img {
+            height: 100px;
+            margin-right: 10px;
+        }
+        
+        .navbar-nav .nav-link {
+            color: black;
+            font-size: 1.5rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: color 0.3s;
+            margin: 0 7px;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+        }
+        
+        .navbar-brand .text-white {
+            color: black;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1.9rem;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+        }
+        
+        .header {
+            background-color: #fff;
+            padding: 50px 0;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        
+        .container {
+            margin-top: 50px;
+        }
+        
+        .form-group label {
+            font-weight: bold;
+        }
+        
+        .form-text {
+            color: #6c757d;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        
+        .form-control {
+            font-size: 1rem;
+        }
+        
+        .submit-btn {
+            text-align: right;
+        }
+        
+        .btn-primary {
+            background-color: rgb(68, 136, 244);
+            color: white;
+        }
+        
+        .mb-3 {
+            margin-bottom: 3rem !important;
+        }
+        
+        footer {
+            margin-top: 100px;
+            background-color: #f8f9fa;
+            color: black;
+            padding: 30px;
+            text-align: center;
+        }
+
+        /* 추가된 스타일 */
+        .my-case-dropdown {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" alt="Crime Scene 로고" class="navbar-logo">
+            <span class="text-white">Crime Scene</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="../main/main.html">Home</a>
+                <a class="nav-link" href="../notice/notice.html">소통하기</a>
+                <a class="nav-link" href="../mapmain/mapmain.html">지도보기</a>
+                <a class="nav-link" href="../chart/chart.html">범죄통계표</a>
+                <a class="nav-link" href="../region/region.html">위험지역</a>
+                <a class="nav-link" href="../record/record.html">기록일지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 헤더 -->
+<div class="header">
+    <div class="container">
+        <h1>순찰 일지 작성</h1>
+        <p>순찰 중 발생한 사항을 기록해주세요.</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 내 사건 목록 불러오기 드롭다운 -->
+    <div class="my-case-dropdown">
+        <label for="myCases" class="form-label">내 사건 목록에서 불러오기</label>
+        <select id="myCases" class="form-select">
+            <option value="">사건 선택</option>
+        </select>
+    </div>
+
+    <form id="writeForm">
+        <div class="mb-3 row">
+            <label for="title" class="col-sm-2 col-form-label">순찰 제목 *</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="title" required>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="start-time" class="col-sm-2 col-form-label">시작 시간 *</label>
+            <div class="col-sm-4">
+                <input type="datetime-local" class="form-control" id="start-time" required>
+            </div>
+            <label for="end-time" class="col-sm-2 col-form-label">종료 시간 *</label>
+            <div class="col-sm-4">
+                <input type="datetime-local" class="form-control" id="end-time" required>
+            </div>
+        </div>
+
+        <!-- 상세 주소 입력 -->
+        <div class="mb-3 row">
+            <label for="detailedAddress" class="col-sm-2 col-form-label">순찰구역 *</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="detailedAddress" placeholder="상세 주소를 입력하세요" required>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="observations" class="col-sm-2 col-form-label">관찰된 사항 *</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="observations" rows="4" required></textarea>
+            </div>
+        </div>
+
+        <!-- 신고 내용 입력 -->
+        <div class="mb-3 row">
+            <label for="reportContent" class="col-sm-2 col-form-label">신고 내용 *</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="reportContent" rows="4" required></textarea>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="actions" class="col-sm-2 col-form-label">조치 사항 *</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="actions" rows="3" required></textarea>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="file" class="col-sm-2 col-form-label">사진 업로드</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control" id="file" accept="image/*">
+            </div>
+        </div>
+        
+        <div class="submit-btn">
+            <button type="submit" class="btn btn-primary">등록</button>
+        </div>
+    </form>
+</div>
+
+<!-- 푸터 -->
+<footer>
+    <p>경기도 용인시 처인구 용인대학로 134 |
+        민원전화 010-1234-5678</p>
+        <p>© 2024 Crime Scene. All rights reserved.</p>
+        <p>본 사이트는 졸업작품을 위해 임시적으로 개발된 사이트임을 알립니다.</p>
+</footer>
+
+<!-- Firebase SDK 로드 -->
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-storage-compat.js"></script>
+
+<script>
+    // Firebase 초기화
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7g5DdSIGP7FB5Jjsejqjwd71HKjZK0XI",
+        authDomain: "crime-scene-9a5f5.firebaseapp.com",
+        projectId: "crime-scene-9a5f5",
+        storageBucket: "crime-scene-9a5f5.appspot.com",
+        messagingSenderId: "1056014636450",
+        appId: "1:1056014636450:web:3ca8a4560bf0c135a7cefb"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    const storage = firebase.storage(); // Firebase Storage 참조
+
+    let currentUserUID = null;
+    let selectedDate = null;  // 선택한 날짜를 저장할 변수
+    
+    // 로그인 상태 확인
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            currentUserUID = user.uid;
+            loadMyCases();  // 로그인된 사용자의 사건 목록 불러오기
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            selectedDate = urlParams.get('date');  // 선택된 날짜를 URL 파라미터로부터 가져옴
+        } else {
+            window.location.href = 'login.html'; // 로그인 페이지로 리디렉션
+        }
+    });
+
+    // 내 사건 목록 불러오기 함수
+    function loadMyCases() {
+        const myCasesSelect = document.getElementById('myCases');
+        db.collection('assignedCases').where('담당자ID', '==', currentUserUID).get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                const caseData = doc.data();
+                const option = document.createElement('option');
+                option.value = doc.id;
+                option.textContent = caseData.제목;
+                myCasesSelect.appendChild(option);
+            });
+        });
+    }
+
+    // 내 사건 목록에서 선택된 사건의 내용 불러오기
+    document.getElementById('myCases').addEventListener('change', function() {
+        const caseId = this.value;
+        if (caseId) {
+            db.collection('assignedCases').doc(caseId).get().then((doc) => {
+                if (doc.exists) {
+                    const caseData = doc.data();
+                    document.getElementById('reportContent').value = caseData.내용;  // 신고 내용란에 자동 입력
+                }
+            }).catch((error) => {
+                console.error("사건 내용을 불러오는 중 오류 발생: ", error);
+            });
+        }
+    });
+
+    // 일지 작성 폼 제출 시 Firestore에 저장
+    document.getElementById('writeForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+    
+        const title = document.getElementById('title').value;
+        const startTime = document.getElementById('start-time').value;
+        const endTime = document.getElementById('end-time').value;
+        const detailedAddress = document.getElementById('detailedAddress').value;
+        const observations = document.getElementById('observations').value;
+        const reportContent = document.getElementById('reportContent').value; // 신고 내용 추가
+        const actions = document.getElementById('actions').value;
+        const fileInput = document.getElementById('file').files[0];  // 업로드할 파일 가져오기
+    
+        if (!title || !startTime || !endTime || !detailedAddress || !observations || !actions || !reportContent || !selectedDate) {
+            alert('모든 필드를 입력해 주세요.');
+            return;
+        }
+    
+        // Firestore에 저장할 데이터 객체
+        const patrolLog = {
+            title: title,
+            startTime: startTime,
+            endTime: endTime,
+            detailedAddress: detailedAddress,
+            observations: observations,
+            reportContent: reportContent, // 신고 내용 저장
+            actions: actions,
+            createdAt: new Date().toISOString(),
+            date: selectedDate  // 선택된 날짜 정보 저장
+        };
+    
+        try {
+            if (fileInput) {
+                // Firebase Storage에 파일 업로드 - 'proof' 폴더에 저장
+                const storageRef = firebase.storage().ref();
+                const fileRef = storageRef.child(`proof/${currentUserUID}/${new Date().toISOString()}/${fileInput.name}`);
+                await fileRef.put(fileInput);  // 파일 업로드
+    
+                // 업로드된 파일의 URL을 가져오기
+                const fileURL = await fileRef.getDownloadURL();
+                patrolLog.imagePath = fileURL;  // 업로드된 이미지 URL Firestore에 저장
+            }
+    
+            // Firestore에 순찰 일지 데이터 저장 (고유 ID로 자동 생성)
+            await db.collection('patrolLogs').doc(currentUserUID).collection('logs').add(patrolLog);
+    
+            alert('일지가 저장되었습니다.');
+            window.location.href = 'record.html';  // 기록 페이지로 이동
+        } catch (error) {
+            console.error('일지 저장 중 오류:', error);
+            alert('일지 저장 중 오류가 발생했습니다.');
+        }
+    });
+</script>
+
+<!-- 부트스트랩 JS 로드 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

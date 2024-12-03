@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Scene</title>
+    
+    <!-- 부트스트랩 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="main.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid" style="padding-right: 50px; padding-left: 50px;">
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" style="height: 100px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="../main/main.html">Home</a>
+                <a class="nav-link" id="authLink" href="../login/login.html">login</a>
+                <a class="nav-link" href="../notice/notice.html">소통하기</a>
+                <a class="nav-link" href="../mapmain/mapmain.html">지도보기</a>
+                <a class="nav-link" href="../chart/chart.html">범죄통계표</a>
+                <a class="nav-link" href="../region/region.html">위험지역</a>
+                <a class="nav-link" href="../record/record.html">기록일지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 배경 이미지 및 내용 컨테이너 -->
+<div class="bg-image-container">
+    <img class="bg-image" src="../image/menu.jpg" alt="Background Image">
+
+    <!-- 텍스트 애니메이션 -->
+    <div class="crime-statistics">
+        <span>the number of crimes</span><br>
+        <span class="crime-number">367,985</span>
+    </div>
+
+    <!-- 메뉴 타이틀 -->
+    <div class="menu-title">
+        <h2>MAIN</h2>
+        <p>언제나 국민의 안전을 위하여 힘쓰겠습니다</p>
+    </div>
+</div>
+
+<!-- 메뉴 버튼 -->
+<div class="menu-buttons">
+    <button type="button" class="btn btn-light menu-button map-button" onclick="location.href='../mapmain/mapmain.html'">
+        <i class="fas fa-map-marked-alt icon"></i>
+        <span class="button-text">지도보기</span>
+    </button>
+    <button type="button" class="btn btn-light menu-button statistics-button" onclick="location.href='../chart/chart.html'">
+        <i class="fas fa-chart-bar icon"></i>
+        <span class="button-text">범죄통계표</span>
+    </button>
+    <button type="button" class="btn btn-light menu-button route-button" onclick="location.href='../region/region.html'">
+        <i class="fas fa-lightbulb icon"></i>
+        <span class="button-text">위험지역</span>
+    </button>
+</div>
+
+<!-- 링크 -->
+<div class="link-container container">
+    <a href="https://www.sexoffender.go.kr/indexN.nsc">
+        <img src="../image/link1.jpg" alt="성범죄자 알림 바로가기">
+    </a>
+    <a href="https://www.police.go.kr/index.do">
+        <img src="../image/link2.jpeg" alt="경찰청 바로가기">
+    </a>
+    <a href="https://www.epeople.go.kr/index.jsp">
+        <img src="../image/link4.jpg" alt="국민 신문고 바로가기">
+    </a>
+</div>
+
+<!-- 푸터 -->
+<footer>
+    <p>경기도 용인시 처인구 용인대학로 134 | 민원전화 010-1234-5678</p>
+    <p>© 2024 Crime Scene. All rights reserved.</p>
+    <p>본 사이트는 졸업작품을 위해 임시적으로 개발된 사이트임을 알립니다.</p>
+</footer>
+
+
+
+<script src="main.js"></script>
+<!-- 부트스트랩 JS 로드 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

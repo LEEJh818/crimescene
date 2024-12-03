@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>순찰요청 상세 보기</title>
+    <!-- 부트스트랩 CSS 로드 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        .navbar {
+            position: relative;
+            width: 100%;
+            z-index: 1001;
+            padding: 30px 0;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+        }
+        .navbar-custom {
+            padding-right: 50px;
+            padding-left: 50px;
+        }
+        .navbar-nav {
+            margin-left: auto;
+        }
+        .navbar-brand img {
+            height: 100px;
+            margin-right: 10px;
+        }
+        .navbar-nav .nav-link {
+            color: black;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+            margin: 0 7px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+        }
+        .navbar-brand .text-white {
+            color: black;
+            font-size: 1.9rem;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 50px 0;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+        }
+        .content {
+            margin: 40px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .board_view {
+            width: 90%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        .board_view th, .board_view td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            font-size: 1.2rem;
+        }
+        .board_view th {
+            background-color: #f8f9fa;
+            text-align: left;
+        }
+
+        .comments-section {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            border-top: 1px solid #dee2e6;
+            padding-top: 20px;
+        }
+        .comment {
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px 0;
+        }
+        .comment .comment-author {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .comment .comment-date {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .buttons button {
+            margin: 0 10px;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: rgb(68, 136, 244);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #f4553d;
+            color: white;
+        }
+
+        footer {
+            margin-top: 100px;
+            background-color: #f8f9fa;
+            color: black;
+            padding: 30px;
+            text-align: center;
+        }
+
+        /* 지도 크기 */
+        #map {
+            width: 90%;
+            height: 400px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" alt="Crime Scene 로고" class="navbar-logo">
+            <span class="text-white">Crime Scene</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="../main/main.html">Home</a>
+                <a class="nav-link" href="../notice/notice.html">소통하기</a>
+                <a class="nav-link" href="../mapmain/mapmain.html">지도보기</a>
+                <a class="nav-link" href="../chart/chart.html">범죄통계표</a>
+                <a class="nav-link" href="../region/region.html">위험지역</a>
+                <a class="nav-link" href="../record/record.html">기록일지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 헤더 -->
+<div class="header">
+    <div class="container">
+        <h1>의견 상세 보기</h1>
+        <p>소중한 의견 감사합니다</p>
+    </div>
+</div>
+
+<!-- 의견 상세 내용 -->
+<div class="container content">
+    <table class="board_view">
+        <colgroup>
+            <col width="15%">
+            <col width="35%">
+            <col width="15%">
+            <col width="*">
+        </colgroup>
+        <tbody>
+            <tr>
+                <th>제목</th>
+                <td id="postTitle"></td>
+                <th>조회수</th>
+                <td id="postHitCount"></td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td id="postAuthor"></td>
+                <th>작성시간</th>
+                <td id="postDate"></td>
+            </tr>
+            <tr>
+                <th>지역</th>
+                <td colspan="3" id="postRegion"></td>
+            </tr>
+            <tr>
+                <th>상세 주소</th>
+                <td colspan="3" id="postAddress"></td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td colspan="3" id="postContent"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 카카오맵 추가 -->
+<div id="map"></div>
+
+<!-- 댓글 섹션 -->
+<div class="comments-section container">
+    <h2>댓글</h2>
+    <div id="comments"></div>
+
+    <!-- 댓글 작성 폼 -->
+    <div class="comment-form mt-4">
+        <textarea id="commentContent" class="form-control" rows="3" placeholder="댓글을 입력하세요"></textarea>
+        <button class="btn btn-primary mt-2" id="submitComment">댓글 작성</button>
+    </div>
+</div>
+
+<!-- 버튼들 -->
+<div class="buttons">
+    <button class="btn btn-primary" id="backButton">목록</button>
+    <button class="btn btn-danger" id="deleteButton" style="display: none;">삭제</button>
+    <button class="btn btn-primary" id="myCaseButton" style="display: none;">내 사건으로</button> <!-- "내 사건으로" 버튼 추가 -->
+</div>
+
+<!-- 푸터 -->
+<footer>
+    <p>경기도 용인시 처인구 용인대학로 134 | 민원전화 010-1234-5678</p>
+    <p>© 2024 Crime Scene. All rights reserved.</p>
+    <p>본 사이트는 졸업작품을 위해 임시적으로 개발된 사이트임을 알립니다.</p>
+</footer>
+
+<!-- Firebase SDK 로드 -->
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script> <!-- Firebase Auth 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=1b5eaa5f89dbc525e2d29d5c0911d1f9&libraries=services"></script> <!-- 카카오맵 추가 -->
+
+<script>
+// Firebase 초기화
+const firebaseConfig = {
+        apiKey: "AIzaSyD7g5DdSIGP7FB5Jjsejqjwd71HKjZK0XI",
+        authDomain: "crime-scene-9a5f5.firebaseapp.com",
+        projectId: "crime-scene-9a5f5",
+        storageBucket: "crime-scene-9a5f5.appspot.com",
+        messagingSenderId: "1056014636450",
+        appId: "1:1056014636450:web:3ca8a4560bf0c135a7cefb"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth(); // Firebase Auth 초기화
+
+// URL에서 게시글 ID 가져오기
+const params = new URLSearchParams(window.location.search);
+const postId = params.get('id');
+
+// 게시글을 불러오는 함수
+function loadPostDetails(postId) {
+    db.collection('patrolRequests').doc(postId).get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            document.getElementById('postTitle').textContent = data.제목;
+            document.getElementById('postAuthor').textContent = data.닉네임;
+            document.getElementById('postDate').textContent = data.날짜.toDate().toLocaleDateString();
+            document.getElementById('postContent').textContent = data.내용;
+            document.getElementById('postRegion').textContent = data.지역;
+            document.getElementById('postAddress').textContent = data.주소;
+
+            // 지도 초기화 및 마커 설정
+            const lat = data.위도; // Firestore에 저장된 위도
+            const lng = data.경도; // Firestore에 저장된 경도
+
+            var mapContainer = document.getElementById('map');
+            var mapOption = { 
+                center: new kakao.maps.LatLng(lat, lng),
+                level: 4 // 확대 레벨
+            };
+
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+
+            var markerPosition  = new kakao.maps.LatLng(lat, lng); 
+            var marker = new kakao.maps.Marker({
+                position: markerPosition
+            });
+            marker.setMap(map);  // 마커 지도에 표시
+
+            var infowindow = new kakao.maps.InfoWindow({
+                content: `<div style="padding:5px;">${data.제목}</div>`
+            });
+            infowindow.open(map, marker);
+
+            // 로그인한 유저 정보 확인 및 "내 사건으로" 버튼 표시
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    // 로그인한 유저에게만 "내 사건으로" 버튼 표시
+                    document.getElementById('myCaseButton').style.display = 'inline-block';
+                }
+            });
+
+            // 관리자 여부 확인 (여기선 기본적으로 true로 설정)
+            const isAdmin = true; // 실제 구현 시 Firebase Auth로 관리자 여부 확인 필요
+            if (isAdmin) {
+                document.getElementById('deleteButton').style.display = 'inline-block';  // 블록형태로 변경
+            }
+
+            // 댓글 불러오기
+            loadComments(postId);
+        } else {
+            alert('해당 게시글이 존재하지 않습니다.');
+        }
+    }).catch((error) => {
+        console.error('게시글을 불러오는 중 오류 발생: ', error);
+    });
+}
+
+// "내 사건으로" 버튼 클릭 시
+document.getElementById('myCaseButton').addEventListener('click', () => {
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            const caseData = {
+                사건ID: postId,
+                담당자ID: user.uid,
+                담당자이름: user.displayName || '익명',
+                지역: document.getElementById('postRegion').textContent,
+                제목: document.getElementById('postTitle').textContent,
+                내용: document.getElementById('postContent').textContent, // 글 내용도 함께 저장
+                날짜: new Date()
+            };
+            db.collection('assignedCases').add(caseData).then(() => {
+                // 사건 상태 업데이트
+                updatePostStatus(postId, "순찰 접수됨");
+                alert('사건이 내 사건으로 등록되었습니다.');
+            }).catch((error) => {
+                console.error('사건 등록 중 오류 발생: ', error);
+            });
+        } else {
+            alert('로그인이 필요합니다.');
+        }
+    });
+});
+
+// 게시글 상태를 업데이트하는 함수
+function updatePostStatus(postId, status) {
+    db.collection('patrolRequests').doc(postId).update({
+        상태: status
+    }).then(() => {
+        console.log('게시글 상태가 업데이트되었습니다.');
+    }).catch((error) => {
+        console.error('게시글 상태 업데이트 중 오류 발생: ', error);
+    });
+}
+
+// 댓글 불러오는 함수
+function loadComments(postId) {
+    const commentsDiv = document.getElementById('comments');
+    commentsDiv.innerHTML = ''; // 기존 댓글 초기화
+
+    db.collection('patrolRequests').doc(postId).collection('comments').orderBy('날짜', 'asc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+            const comment = doc.data();
+            const commentDiv = document.createElement('div');
+            commentDiv.classList.add('comment');
+            commentDiv.innerHTML = `
+                <div class="comment-author">${comment.작성자}</div>
+                <div class="comment-date">${comment.날짜.toDate().toLocaleString()}</div>
+                <div class="comment-content">${comment.내용}</div>
+            `;
+            commentsDiv.appendChild(commentDiv);
+        });
+    }).catch((error) => {
+        console.error('댓글을 불러오는 중 오류 발생: ', error);
+    });
+}
+
+// 댓글 작성 함수 (로그인 확인)
+document.getElementById('submitComment').addEventListener('click', () => {
+    const commentContent = document.getElementById('commentContent').value.trim();
+
+    auth.onAuthStateChanged((user) => {
+        if (user) { // 로그인한 경우
+            if (commentContent) {
+                const commentData = {
+                    작성자: user.displayName || '익명', // 로그인한 유저의 이름
+                    내용: commentContent,
+                    날짜: new Date()
+                };
+
+                db.collection('patrolRequests').doc(postId).collection('comments').add(commentData).then(() => {
+                    alert('댓글이 작성되었습니다.');
+                    document.getElementById('commentContent').value = ''; // 입력 필드 초기화
+                    loadComments(postId); // 댓글 목록 갱신
+                }).catch((error) => {
+                    console.error('댓글 작성 중 오류 발생: ', error);
+                });
+            } else {
+                alert('댓글 내용을 입력하세요.');
+            }
+        } else { // 로그인하지 않은 경우
+            alert('로그인이 필요합니다. 로그인 후 댓글을 작성하세요.');
+        }
+    });
+});
+
+// 뒤로가기 버튼 클릭 시 목록으로 이동
+document.getElementById('backButton').addEventListener('click', () => {
+    window.location.href = 'map.html'; // 목록 페이지 URL로 변경
+});
+
+// 게시글 삭제 함수
+document.getElementById('deleteButton').addEventListener('click', () => {
+    if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+        db.collection('patrolRequests').doc(postId).delete().then(() => {
+            alert('게시글이 삭제되었습니다.');
+            window.location.href = 'map.html'; // 게시판으로 리다이렉션
+        }).catch((error) => {
+            console.error('게시글 삭제 중 오류 발생: ', error);
+        });
+    }
+});
+
+// 페이지 로드 시 게시글 불러오기
+window.onload = function() {
+    loadPostDetails(postId);
+};
+
+</script>
+
+</body>
+</html>

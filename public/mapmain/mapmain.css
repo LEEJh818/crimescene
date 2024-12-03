@@ -1,0 +1,158 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+#map {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+#search-container {
+    width: 350px;
+    height: 100vh;
+    background-color: #f8f9fa;
+    transition: transform 0.3s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    overflow-y: auto;
+}
+#search-container.collapsed {
+    transform: translateX(-350px);
+}
+#toggleSearchBtn {
+    position: absolute;
+    top: 50%;
+    left: 350px;
+    transform: translateY(-50%);
+    background-color: white;
+    color: rgb(68, 136, 244);
+    border: none;
+    border-radius: 0 5px 5px 0;
+    padding: 10px;
+    cursor: pointer;
+    outline: none;
+    z-index: 3;
+}
+#toggleSearchBtn.collapsed {
+    left: 0;
+    border-radius: 5px 0 0 5px;
+}
+#search {
+    margin-top: 50px;
+    padding: 20px;
+}
+#query-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgb(68, 136, 244);
+    border-radius: 5px;
+    padding: 0 10px;
+    background-color: white;
+    height: 50px; /* 높이 조정 */
+}
+#query {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+#query:focus {
+    border: none;
+    outline: none;
+}
+#query::placeholder {
+    color: #999;
+}
+#query:focus::placeholder {
+    color: transparent;
+}
+#searchType {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+}
+#searchBtn {
+    background: none;
+    border: none;
+    color: rgb(68, 136, 244);
+    cursor: pointer;
+    outline: none;
+}
+#searchBtn i {
+    font-size: 20px;
+}
+#placesList {
+    list-style: none;
+    padding: 0;
+}
+.item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+.item:hover {
+    background-color: #f0f0f0;
+}
+.ol-popup {
+    position: absolute;
+    background-color: white;
+    padding: 15px;
+    border: 1px solid black;
+    bottom: 12px;
+    left: -50px;
+    min-width: 180px;
+}
+#homeBtn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    z-index: 3;
+}
+#homeBtn i {
+    font-size: 36px;
+    color: rgb(68, 136, 244);
+}
+
+/* 팝업 스타일 */
+#infoPopup {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 4;
+    max-width: 80%;
+    text-align: center;
+}
+#infoPopup button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#infoPopup button:hover {
+    background-color: #0056b3;
+}

@@ -1,0 +1,100 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fff; /* 배경 색상을 흰색으로 변경 */
+}
+
+.navbar {
+    position: relative;
+    width: 100%;
+    z-index: 1001;
+    padding: 30px 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-custom {
+    padding-right: 50px;
+    padding-left: 50px;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.navbar-brand img {
+    height: 100px;
+    margin-right: 10px;
+}
+
+.navbar-nav .nav-link {
+    color: black;
+    font-size: 1.5rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: color 0.3s;
+    margin: 0 7px; /* 글씨 간격 추가 */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffc107 !important;
+}
+
+.navbar-brand .text-white {
+    color: black;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.9rem;
+}
+
+.header {
+    background-color: #fff; /* 배경 색상을 흰색으로 변경 */
+    padding: 50px 0; 
+    text-align: center;
+    border-bottom: 1px solid #dee2e6; /* 아래쪽 경계선 추가 */
+    margin-bottom: 20px; /* 추가한 선과 내용 사이 간격을 띄움 */
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #343a40;
+}
+
+.header p {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.chart-container {
+    margin-bottom: 150px;
+}
+
+h2 {
+    margin-top: 100px; /* 그래프 제목 위쪽 간격 조절 */
+    margin-bottom: 50px; /* 그래프 제목 아래쪽 간격 조절 */
+    text-align: center; /* 제목 가운데 정렬 */
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.chart {
+    width: 1000px;
+    height: 800px;
+    margin: 0 auto;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.chart-description {
+    text-align: center;
+    margin-top: 10px; /* 원하는 만큼의 간격을 지정합니다. */
+}
+
+.banner {
+    margin-bottom: 100px;
+}
+
+footer {
+    margin-top: 100px;
+    background-color: #f8f9fa;
+    color: black;
+    padding: 30px;
+    text-align: center;
+}

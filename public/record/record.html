@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캘린더</title>
+    
+    <!-- 부트스트랩 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+
+    <!-- 캘린더 라이브러리 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+
+    <style>
+
+        .navbar {
+            position: relative;
+            width: 100%;
+            z-index: 1001;
+            padding: 30px 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+        }
+        .navbar-custom {
+            padding-right: 50px;
+            padding-left: 50px;
+        }
+        .navbar-nav {
+            margin-left: auto;
+        }
+        .navbar-brand img {
+            height: 100px;
+            margin-right: 10px;
+        }
+        .navbar-nav .nav-link {
+            color: black;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+            margin: 0 7px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+        }
+        .navbar-brand .text-white {
+            color: black;
+            font-size: 1.9rem;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            text-align: center;
+        }
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        #logDetail {
+            display: none;
+            margin-top: 20px;
+            width: 70%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #logDetail h4 {
+            cursor: pointer;
+            color: rgb(41, 50, 69);
+            text-decoration: underline;
+            margin-bottom: 10px;
+        }
+        .write-btn-container {
+            margin-top: 15px;
+            text-align: right;
+        }
+        .btn-primary {
+            font-size: 14px;
+            padding: 8px 16px;
+            background-color: rgb(68, 136, 244);
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .btn-primary:hover {
+            background-color: rgb(47, 113, 208);
+        }
+        .fc-event-title {
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .selected-date {
+            background-color: lightgreen !important;
+        }
+
+        footer {
+            margin-top: 100px;
+            background-color: #f8f9fa;
+            color: black;
+            padding: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" alt="Crime Scene 로고" class="navbar-logo">
+            <span class="text-white">Crime Scene</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="../main/main.html">Home</a>
+                <a class="nav-link" href="../notice/notice.html">소통하기</a>
+                <a class="nav-link" href="../mapmain/mapmain.html">지도보기</a>
+                <a class="nav-link" href="../chart/chart.html">범죄통계표</a>
+                <a class="nav-link" href="../region/region.html">위험지역</a>
+                <a class="nav-link" href="../record/record.html">기록일지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>순찰 일지</h2>
+
+    <!-- 캘린더 -->
+    <div id="calendar"></div>
+
+    <!-- 순찰 기록 상세 보기 -->
+    <div id="logDetail">
+        <div class="write-btn-container">
+            <button type="button" class="btn btn-primary" id="writeBtn">글쓰기</button>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<footer>
+    <p>경기도 용인시 처인구 용인대학로 134 | 민원전화 010-1234-5678</p>
+    <p>© 2024 Crime Scene. All rights reserved.</p>
+    <p>본 사이트는 졸업작품을 위해 임시적으로 개발된 사이트임을 알립니다.</p>
+</footer>
+
+<script>
+    // Firebase 초기화
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7g5DdSIGP7FB5Jjsejqjwd71HKjZK0XI",
+        authDomain: "crime-scene-9a5f5.firebaseapp.com",
+        projectId: "crime-scene-9a5f5",
+        storageBucket: "crime-scene-9a5f5.appspot.com",
+        messagingSenderId: "1056014636450",
+        appId: "1:1056014636450:web:3ca8a4560bf0c135a7cefb"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    let currentUserUID = null;
+    let selectedDateElement = null;
+    let calendar = null;
+
+    // 로그인 상태 확인
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            currentUserUID = user.uid;
+            initializeCalendar(); // 캘린더 초기화
+            loadCalendarLogs(); // 로그인된 후 캘린더 기록 불러오기
+        } else {
+            window.location.href = '../login/login.html';
+        }
+    });
+
+    // 캘린더 초기화
+    function initializeCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            dateClick: function(info) {
+                const selectedDate = info.dateStr;
+
+                // 이전 선택 날짜의 배경색 초기화
+                if (selectedDateElement) {
+                    selectedDateElement.classList.remove('selected-date');
+                }
+
+                // 선택한 날짜의 배경색 변경
+                const targetElement = document.querySelector(`[data-date="${selectedDate}"]`);
+                if (targetElement) {
+                    targetElement.classList.add('selected-date');
+                    selectedDateElement = targetElement;
+                }
+
+                loadLogForDate(selectedDate);
+            }
+        });
+        calendar.render();
+    }
+
+    // 캘린더에 기록이 있는 날짜와 글 제목 여러 개 표시
+    function loadCalendarLogs() {
+        db.collection('patrolLogs').doc(currentUserUID).collection('logs').get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const logData = doc.data();
+                const logDate = logData.date;  // Firestore에 저장된 date 필드 사용
+                const logTitle = logData.title;
+                // FullCalendar 이벤트로 기록이 있는 날짜에 글 제목 표시 (여러 개의 제목)
+                calendar.addEvent({
+                    title: logTitle,
+                    start: logDate,
+                    className: 'fc-event-title'
+                });
+            });
+        }).catch((error) => {
+            console.error('캘린더 기록 불러오기 중 오류:', error);
+        });
+    }
+
+    // 선택한 날짜의 모든 기록 불러오기
+    function loadLogForDate(date) {
+        db.collection('patrolLogs').doc(currentUserUID).collection('logs').where('date', '==', date).get()
+        .then((querySnapshot) => {
+            const logDetailContainer = document.getElementById('logDetail');
+            logDetailContainer.style.display = 'block'; // 상세 보기 영역 표시
+          
+            logDetailContainer.innerHTML = ''; // 기존 내용을 초기화
+          
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach((doc) => {
+                    const logData = doc.data();
+                    const logId = doc.id; // 각 기록의 고유 ID
+
+                    // 제목을 개별적으로 생성
+                    const titleElement = document.createElement('h4');
+                    titleElement.innerText = logData.title;
+                    titleElement.style.cursor = 'pointer';
+                    titleElement.style.textDecoration = 'underline';
+
+                    // 클릭 시 개별 기록으로 이동
+                    titleElement.addEventListener('click', function() {
+                        window.location.href = `look.html?logId=${logId}`;
+                    });
+
+                    // 상세 보기 영역에 제목 추가
+                    logDetailContainer.appendChild(titleElement);
+                });
+            } else {
+                logDetailContainer.innerHTML = '<h4>기록이 없습니다.</h4>';
+            }
+
+            // 글쓰기 버튼 추가 (기록이 없든 있든 항상 글쓰기 버튼을 추가)
+            const writeBtnContainer = document.createElement('div');
+            writeBtnContainer.classList.add('write-btn-container');
+            const writeBtn = document.createElement('button');
+            writeBtn.innerText = '글쓰기';
+            writeBtn.classList.add('btn', 'btn-primary');
+            writeBtn.addEventListener('click', function() {
+                window.location.href = `proof.html?date=${date}`; // 선택된 날짜로 글 작성
+            });
+            writeBtnContainer.appendChild(writeBtn);
+            logDetailContainer.appendChild(writeBtnContainer);
+        }).catch((error) => {
+            console.error('일지 불러오기 중 오류:', error);
+        });
+    }
+
+</script>
+
+<!-- 부트스트랩 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

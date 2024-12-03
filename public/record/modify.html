@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>순찰 일지 수정</title>
+    <!-- 부트스트랩 CSS 로드 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar {
+            position: relative;
+            width: 100%;
+            z-index: 1001;
+            padding: 30px 0;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+        }
+        .navbar-custom {
+            padding-right: 50px;
+            padding-left: 50px;
+        }
+        .navbar-nav {
+            margin-left: auto;
+        }
+        .navbar-brand img {
+            height: 100px;
+            margin-right: 10px;
+        }
+        .navbar-nav .nav-link {
+            color: black;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+            margin: 0 7px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+        }
+        .navbar-brand .text-white {
+            color: black;
+            font-size: 1.9rem;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+        .submit-btn {
+            text-align: right;
+        }
+        .btn-primary {
+            background-color: rgb(68, 136, 244); /* 원하는 배경색 */
+            color: white; /* 글자 색을 흰색으로 */
+        }
+        footer {
+            margin-top: 100px;
+            background-color: #f8f9fa;
+            color: black;
+            padding: 30px;
+            text-align: center;
+        }
+        .log-image {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" alt="Crime Scene 로고" class="navbar-logo">
+            <span class="text-white">Crime Scene</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" aria-current="page" href="../main/main.html">Home</a>
+                <a class="nav-link" href="../notice/notice.html">소통하기</a>
+                <a class="nav-link" href="../mapmain/mapmain.html">지도보기</a>
+                <a class="nav-link" href="../chart/chart.html">범죄통계표</a>
+                <a class="nav-link" href="../region/region.html">위험지역</a>
+                <a class="nav-link" href="../record/record.html">기록일지</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>순찰 일지 수정</h1>
+    <form id="editForm">
+        <div class="mb-3">
+            <label for="title" class="form-label">순찰 제목</label>
+            <input type="text" class="form-control" id="title" required>
+        </div>
+        <div class="mb-3">
+            <label for="start-time" class="form-label">시작 시간</label>
+            <input type="datetime-local" class="form-control" id="start-time" required>
+        </div>
+        <div class="mb-3">
+            <label for="end-time" class="form-label">종료 시간</label>
+            <input type="datetime-local" class="form-control" id="end-time" required>
+        </div>
+        <div class="mb-3">
+            <label for="detailedAddress" class="form-label">순찰구역</label>
+            <input type="text" class="form-control" id="detailedAddress" required>
+        </div>
+        <div class="mb-3">
+            <label for="observations" class="form-label">관찰된 사항</label>
+            <textarea class="form-control" id="observations" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="actions" class="form-label">조치 사항</label>
+            <textarea class="form-control" id="actions" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="reportContent" class="form-label">신고 내용</label> <!-- 신고 내용 필드 추가 -->
+            <textarea class="form-control" id="reportContent" rows="3" required></textarea>
+        </div>
+
+        <!-- 기존 이미지 표시 -->
+        <div class="mb-3">
+            <label class="form-label">기존 사진</label>
+            <img id="logImage" class="log-image" src="#" alt="순찰 사진" style="display:none;">
+            <button type="button" class="btn btn-danger" id="deleteImageButton" style="display:none;">사진 삭제</button>
+        </div>
+
+        <!-- 새로운 이미지 업로드 -->
+        <div class="mb-3">
+            <label for="file" class="form-label">새 사진 업로드</label>
+            <input type="file" class="form-control" id="file" accept="image/*">
+        </div>
+
+        <div class="submit-btn">
+            <button type="submit" class="btn btn-primary">수정 완료</button>
+        </div>
+    </form>
+</div>
+
+<footer>
+    <p>경기도 용인시 처인구 용인대학로 134 | 민원전화 010-1234-5678</p>
+    <p>© 2024 Crime Scene. All rights reserved.</p>
+</footer>
+
+<!-- Firebase SDK 로드 -->
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-storage-compat.js"></script>
+
+<script>
+    // Firebase 초기화
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7g5DdSIGP7FB5Jjsejqjwd71HKjZK0XI",
+        authDomain: "crime-scene-9a5f5.firebaseapp.com",
+        projectId: "crime-scene-9a5f5",
+        storageBucket: "crime-scene-9a5f5.appspot.com",
+        messagingSenderId: "1056014636450",
+        appId: "1:1056014636450:web:3ca8a4560bf0c135a7cefb"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const auth = firebase.auth();
+
+    let currentUserUID = null;
+    let logId = null;
+    let currentImageRef = null;
+
+    // URL에서 logId 파라미터 가져오기
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    logId = urlParams.get('logId');
+
+    // 로그인 상태 확인
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            currentUserUID = user.uid;
+            if (logId) {
+                loadLogForEdit(logId); // 수정할 기록 불러오기
+            } else {
+                alert('수정할 일지가 없습니다.');
+                window.location.href = 'record.html'; // logId가 없으면 목록으로 이동
+            }
+        } else {
+            window.location.href = 'login.html';
+        }
+    });
+
+    // Firestore에서 수정할 순찰 일지 불러오기
+    function loadLogForEdit(logId) {
+        db.collection('patrolLogs').doc(currentUserUID).collection('logs').doc(logId).get()
+        .then((doc) => {
+            if (doc.exists) {
+                const logData = doc.data();
+                document.getElementById('title').value = logData.title;
+                document.getElementById('start-time').value = logData.startTime;
+                document.getElementById('end-time').value = logData.endTime;
+                document.getElementById('detailedAddress').value = logData.detailedAddress;
+                document.getElementById('observations').value = logData.observations;
+                document.getElementById('actions').value = logData.actions;
+                document.getElementById('reportContent').value = logData.reportContent;
+
+                // 기존 이미지 표시
+                if (logData.imagePath) {
+                    storage.refFromURL(logData.imagePath).getDownloadURL()
+                    .then((url) => {
+                        document.getElementById('logImage').src = url;
+                        document.getElementById('logImage').style.display = 'block';
+                        document.getElementById('deleteImageButton').style.display = 'inline';
+                        currentImageRef = storage.refFromURL(logData.imagePath); // 기존 이미지 참조 저장
+                    }).catch((error) => {
+                        console.error('이미지 불러오기 오류:', error);
+                    });
+                }
+            } else {
+                alert('기록이 존재하지 않습니다.');
+                window.location.href = 'record.html';
+            }
+        })
+        .catch((error) => {
+            console.error('수정할 일지 불러오기 중 오류:', error);
+        });
+    }
+
+    // 이미지 삭제
+    document.getElementById('deleteImageButton').addEventListener('click', () => {
+        if (currentImageRef) {
+            currentImageRef.delete().then(() => {
+                alert('사진이 삭제되었습니다.');
+                document.getElementById('logImage').style.display = 'none';
+                document.getElementById('deleteImageButton').style.display = 'none';
+                currentImageRef = null; // 이미지 참조 초기화
+            }).catch((error) => {
+                console.error('이미지 삭제 오류:', error);
+            });
+        }
+    });
+
+    // 수정된 일지 저장
+    document.getElementById('editForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const title = document.getElementById('title').value;
+        const startTime = document.getElementById('start-time').value;
+        const endTime = document.getElementById('end-time').value;
+        const detailedAddress = document.getElementById('detailedAddress').value;
+        const observations = document.getElementById('observations').value;
+        const actions = document.getElementById('actions').value;
+        const reportContent = document.getElementById('reportContent').value;
+        const fileInput = document.getElementById('file').files[0];
+
+        if (!title || !startTime || !endTime || !detailedAddress || !observations || !actions || !reportContent) {
+            alert('모든 필드를 입력해주세요.');
+            return;
+        }
+
+        // 업데이트할 데이터
+        const updatedData = {
+            title: title,
+            startTime: startTime,
+            endTime: endTime,
+            detailedAddress: detailedAddress,
+            observations: observations,
+            actions: actions,
+            reportContent: reportContent
+        };
+
+        try {
+            if (fileInput) {
+                // 새 이미지 업로드
+                const storageRef = storage.ref();
+                const fileRef = storageRef.child(`proof/${currentUserUID}/${logId}/${fileInput.name}`);
+                await fileRef.put(fileInput); // 파일 업로드
+                const fileURL = await fileRef.getDownloadURL();
+                updatedData.imagePath = fileURL; // 새로운 이미지 URL 저장
+
+                // 기존 이미지 삭제
+                if (currentImageRef) {
+                    await currentImageRef.delete();
+                }
+            }
+
+            // Firestore에 순찰 일지 데이터 업데이트
+            await db.collection('patrolLogs').doc(currentUserUID).collection('logs').doc(logId).update(updatedData);
+
+            alert('일지가 성공적으로 수정되었습니다.');
+            window.location.href = 'record.html'; // 수정 완료 후 목록으로 이동
+        } catch (error) {
+            console.error('일지 수정 중 오류:', error);
+            alert('일지 수정 중 오류가 발생했습니다.');
+        }
+    });
+</script>
+
+<!-- 부트스트랩 JS 로드 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

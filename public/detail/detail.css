@@ -1,0 +1,154 @@
+.navbar {
+    position: relative;
+    width: 100%;
+    z-index: 1001;
+    padding: 30px 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+}
+.navbar-custom {
+    padding-right: 50px;
+    padding-left: 50px;
+}
+.navbar-nav {
+    margin-left: auto;
+}
+.navbar-brand img {
+    height: 100px;
+    margin-right: 10px;
+}
+.navbar-nav .nav-link {
+    color: black;
+    font-size: 1.5rem;
+    transition: color 0.3s;
+    margin: 0 7px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.navbar-nav .nav-link:hover {
+    color: #ffc107 !important;
+}
+.navbar-brand .text-white {
+    color: black;
+    font-size: 1.9rem;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.community-menu {
+    background-color: white;
+    padding: 20px 0;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.community-page {
+    font-size: 1.2rem;
+    color: #343a40;
+    margin-right: 15px;
+}
+.community-menu .nav {
+    justify-content: center;
+}
+.community-menu .nav-link {
+    font-size: 1.2rem;
+    color: #343a40;
+    transition: color 0.3s;
+}
+.community-menu .nav-link:hover {
+    color: #ffc107;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fff;
+}
+.header {
+    background-color: #fff;
+    padding: 50px 0;
+    text-align: center;
+    border-bottom: 1px solid #dee2e6;
+}
+.header h1 {
+    font-size: 2.5rem;
+    color: #343a40;
+}
+.content {
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.content img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+}
+.board_view {
+    width: 90%;
+    max-width: 1200px;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+.board_view th, .board_view td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    font-size: 1.2rem;
+}
+.board_view th {
+    background-color: #f8f9fa;
+    text-align: left;
+}
+.comments-section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    border-top: 1px solid #dee2e6;
+    padding-top: 20px;
+}
+.comment {
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 0;
+}
+.comment .comment-author {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.comment .comment-date {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+.comment .comment-content {
+    margin-bottom: 10px;
+}
+
+.buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+.buttons button {
+    margin: 0 10px;
+}
+
+.btn-primary{
+    background-color: rgb(68, 136, 244); /* 원하는 배경색 (여기서는 토마토색) */
+    color: white; /* 글자 색을 흰색으로 */
+}
+
+/* btn-danger 클래스에 스타일을 추가 */
+.btn-danger {
+    background-color: #f4553d; /* 원하는 배경색 (여기서는 토마토색) */
+    color: white; /* 글자 색을 흰색으로 */
+}
+
+footer {
+    margin-top: 100px;
+    background-color: #f8f9fa;
+    color: black;
+    padding: 30px;
+    text-align: center;
+}
